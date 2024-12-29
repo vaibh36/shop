@@ -6,8 +6,7 @@ export enum Subjects {
     OrderCreated = 'order:updated',
     TicketUpdated = 'ticket:updated',
     OrderCancelled = 'order:cancelled',
-    ExpirationComplete = 'expiration:complete',
-    ItemRated = 'item:rated'
+    ExpirationComplete = 'expiration:complete'
 }
 
 interface Event {

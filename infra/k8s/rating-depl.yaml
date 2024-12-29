@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rating-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rating
+  template:
+    metadata:
+      labels:
+        app: rating
+    spec:
+      containers:
+        - name: rating
+          image: vaibhavgera/rating
+          env:
+            - name: MONGO_URI
+              value: "mongodb://rating-mongo-srv:27017/rating"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rating-srv
+spec:
+  selector:
+    app: rating
+  ports:
+    - name: rating
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

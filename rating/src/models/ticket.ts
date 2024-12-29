@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 
-export const Status = {
-    BOOKED: "booked",
-    IDLE: "idle",
-};
 
-type StatusValues = typeof Status[keyof typeof Status];
 
 export interface UserRating {
     email: string,
@@ -14,16 +9,12 @@ export interface UserRating {
 
 
 interface QuantityAttrs {
-    title: string
-    status?: StatusValues
-    bookedBy?: string,
-    rating?: UserRating
+    ticketId: string,
+    rating?:UserRating
 }
 
 interface QuantityDoc extends mongoose.Document {
-    title: string,
-    status?: StatusValues
-    bookedBy?: string
+    ticketId: string,
     rating?: UserRating[]
 }
 
@@ -33,25 +24,17 @@ interface OrderModel extends mongoose.Model<QuantityDoc> {
 
 const quantitySchema = new mongoose.Schema({
    
-     title:{
+     ticketId:{
         type: String,
         required: true
     },
-    status:{
-       type: String, 
-        enum: Object.values(Status), 
-        required: false,
-    },
-     bookedBy:{
-       type: String, 
-        required: false,
-    },
-        rating: [
+    rating: [
     {
         email: { type: String, required: false },
             rating: { type: Number, min: 1, max: 5, required: false },
         
-    }],
+    },
+],
 }, {
     toJSON:{
         transform(doc, ret){
@@ -65,10 +48,8 @@ const quantitySchema = new mongoose.Schema({
 
 quantitySchema.statics.build = (attrs: QuantityAttrs)=>{
     return new Quantity({
-        title: attrs.title,
-        status: Status.IDLE,
-        bookedBy: attrs?.bookedBy,
-        rating: attrs?.rating
+        ticketId: attrs.ticketId,
+        rating: attrs.rating
     })
 }
 

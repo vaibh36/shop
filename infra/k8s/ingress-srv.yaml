@@ -24,3 +24,10 @@ spec:
                 name: orders-srv
                 port:
                   number: 3000
+          - path: /api/rating/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: rating-srv
+                port:
+                  number: 3000

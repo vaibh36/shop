@@ -6,6 +6,7 @@ import { natsWrapper } from "./nats-wrapper";
 import { showAllItemRouter } from "./show";
 import { errorHandler } from "./middleware/error-handler";
 import { OrderCreatedListener } from "./events/listeners/order-created-istener";
+import { ItemRatedListener } from "./events/listeners/item-rated-listener";
 
 const app = express()
 app.use(json())
@@ -33,6 +34,7 @@ const start = async () => {
         
 
         new OrderCreatedListener(natsWrapper.client).listen()
+        new ItemRatedListener(natsWrapper.client).listen()
 
         await mongoose.connect('mongodb://tickets-mongo-srv:27017/tickets', {
       serverSelectionTimeoutMS: 30000

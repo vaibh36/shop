@@ -13,7 +13,7 @@ router.post('/api/tickets', [
     .isLength({ min: 3, max: 50 }).withMessage('Title must be between 3 and 50 characters long'),
 ],validateRequest, async (req: Request, res: Response, next: NextFunction) => {    
   const { title } = req.body
-  console.log('I am inside service to create ticket')
+  console.log('I am inside service to create ticket2')
   
   
       const item = Quantity.build({
