@@ -24,3 +24,11 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
+    - image: vaibhavgera/communication
+      context: communication
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
