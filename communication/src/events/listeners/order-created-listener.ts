@@ -1,5 +1,6 @@
 import { Message } from "node-nats-streaming";
 import { Listener } from "./base-listener";
+import { emailQueue } from "../../queues/emailQueue";
 
 
 export enum Subjects {
@@ -26,7 +27,12 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
     async onMessage(data: OrderCreatedEvent['data'], msg: Message){
 
         const {userId} = data
-        console.log('I am in listener of communication You have booked an order and your email is:-', userId)
+        console.log('I am in listener of communication You have booked an order and your email is2:-', userId)
+        await emailQueue.add({
+            email: userId
+        }, {
+            delay: 5000
+        })
         msg.ack()
 
     }
