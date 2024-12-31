@@ -7,11 +7,13 @@ import { showAllItemRouter } from "./show";
 import { errorHandler } from "./middleware/error-handler";
 import { OrderCreatedListener } from "./events/listeners/order-created-istener";
 import { ItemRatedListener } from "./events/listeners/item-rated-listener";
+import { showItemDetailRouter } from "./ticket-detail";
 
 const app = express()
 app.use(json())
 app.use(newTicketRouter)
 app.use(showAllItemRouter)
+app.use(showItemDetailRouter)
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     errorHandler(err, req, res, next);
 });

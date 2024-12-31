@@ -58,7 +58,7 @@ router.post('/api/rating', [
    })
       
   res.status(201).send({
-           message: "Item has been rated successfully2"
+           message: "Item has been rated successfully3"
          })
   
     
