@@ -16,6 +16,7 @@ export interface OrderCreatedEvent {
     subject: Subjects.OrderCreated;
     data: {
         userId: string;
+        id: string
     };
 }
 
@@ -26,10 +27,11 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
 
     async onMessage(data: OrderCreatedEvent['data'], msg: Message){
 
-        const {userId} = data
+        const {userId, id} = data
         console.log('I am in listener of communication You have booked an order and your email is2:-', userId)
         await emailQueue.add({
-            email: userId
+            email: userId,
+            orderId: id
         }, {
             delay: 5000
         })
