@@ -1,4 +1,4 @@
-import express, {Request, Response}  from "express";
+import express, {NextFunction, Request, Response}  from "express";
 import { Order } from "../models/orders";
 
 import { NotFoundError } from "../errors/not-found-error";
@@ -6,34 +6,32 @@ import jwt from 'jsonwebtoken'
 import { NotAuthorizedError } from "../errors/not-authorized-error";
 import {OrderCancelledPublisher} from '../events/publishers/order-cancelled-publisher'
 import { natsWrapper } from "../nats-wrapper";
+import { OrderStatus } from "../models/orders";
 
 
 const router = express.Router()
-router.delete('/api/orders/:orderId', async(req:Request, res: Response)=>{
+router.delete('/api/orders/:orderId', async(req:Request, res: Response, next: NextFunction)=>{
 
     const {orderId} = req.params
-    const order = await Order.findById(orderId)
-    console.log('info in delete order is:-', orderId, order)
-    let payload
-
+    const order = await Order.findById(orderId).populate('ticket')
+    console.log('info in delete order is1:-', orderId, order)
     
-         try{
-          payload = jwt.verify(
-        req?.session?.jwt,
-        process.env.JWT_KEY!
-    )
-    console.log('jwt payload here in delete is:-', payload)
-}catch(e){}
 
     if(!order){
         throw new NotFoundError()
     }
 
    
-    // @ts-ignore
-    if(order?.userId !== payload?.id!) {
-        throw new NotAuthorizedError()
+   
+    if(order?.userId !== req?.body?.email) {
+        const err = new NotAuthorizedError()
+        next(err)
+        return
     }
+
+    console.log('I have reached here now')
+
+    order.status = "cancelled"
     await order.save()
      new OrderCancelledPublisher(natsWrapper.client).publish({
     id: order.id,
@@ -43,7 +41,7 @@ router.delete('/api/orders/:orderId', async(req:Request, res: Response)=>{
     }
    })
 
-
+   
     res.status(204).send(order)
 
 })
