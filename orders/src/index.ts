@@ -1,4 +1,4 @@
-import express from 'express'
+import express, {Request, Response, NextFunction} from 'express'
 import {json} from 'body-parser'
 
 
@@ -24,13 +24,17 @@ app.use(newOrderRouter)
 app.use(deleteOrderRouter)
 app.use(showOrderRouter)
 app.use(indexOrderRouter)
-app.all('*', ()=>{
+app.all('*', (req: Request, res: Response, next: NextFunction)=>{
     console.log('route not found2')
-    throw new NotFoundError()
+ 
+     throw new NotFoundError()
 })
 
 
- app.use(errorHandler)
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+     errorHandler(err, req, res, next);
+});
+
 
 const start = async ()=>{
 

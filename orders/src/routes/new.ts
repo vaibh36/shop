@@ -1,9 +1,10 @@
-import express, {Request, Response}  from "express";
+import express, {NextFunction, Request, Response}  from "express";
 import { body } from "express-validator";
 import mongoose from "mongoose";
 import { Ticket } from "../models/ticket";
 import { Order, OrderStatus } from "../models/orders";
-import { BadRequestError, NotFoundError } from "@vaibhtickets/common";
+import {  NotFoundError } from "@vaibhtickets/common";
+import { BadRequestError } from "../errors/bad-request-error";
 import jwt from 'jsonwebtoken'
 import {OrderCreatedPublisher} from '../events/publishers/order-created-publisher'
 import { natsWrapper } from "../nats-wrapper";
@@ -24,8 +25,8 @@ router.post('/api/orders',[
     .withMessage('email must be provided')
 
 
-
-], async(req:Request, res: Response)=>{
+// @ts-ignore
+], async(req:Request, res: Response, next: NextFunction)=>{
     const {ticketId, email} = req.body
    
  console.log('I am here and the data is2:-', ticketId)
@@ -38,8 +39,10 @@ router.post('/api/orders',[
 
    const isReserved = await ticket.isReserved()
 
-   if(isReserved){
-    throw new BadRequestError('Ticket is already reserved1')
+    if (isReserved) {
+       const err = new BadRequestError('Ticket is already booked by someone')
+        next(err)
+        return
    }
 
 //    const expiration = new Date()

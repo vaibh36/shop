@@ -4,11 +4,14 @@ import { CustomError } from '../errors/custom-error'
 
 export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction)=>{
 
-      if(err instanceof CustomError){
+    if (err instanceof CustomError) {
+          console.log('error here are:-', err.serializeErrors())
         return res.status(err.statusCode).send({
             errors:err.serializeErrors()
         })
     }
+
+
 
     res.status(400).send({
         errors:[

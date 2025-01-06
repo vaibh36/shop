@@ -9,7 +9,7 @@ export class BadRequestError extends CustomError{
     }
 
     serializeErrors(){
-          return [{message: 'This email is already in use'}]
+          return [{message: 'Ticket is already booked by someone'}]
     }
 
 }
