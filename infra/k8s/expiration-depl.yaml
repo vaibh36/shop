@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expiration-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: expiration
+  template:
+    metadata:
+      labels:
+        app: expiration
+    spec:
+      containers:
+        - name: expiration
+          image: vaibhavgera/expiration
+          env:
+            - name: MONGO_URI
+              value: "mongodb://orders-mongo-srv:27017/orders"
+            - name: REDIS_HOST
+              value: expiration-redis-srv

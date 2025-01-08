@@ -29,7 +29,7 @@ router.post('/api/orders',[
 ], async(req:Request, res: Response, next: NextFunction)=>{
     const {ticketId, email} = req.body
    
- console.log('I am here and the data is2:-', ticketId)
+ console.log('I am here and the data is3:-', ticketId)
    const ticket = await Ticket.findById(ticketId)
 
    if(!ticket){

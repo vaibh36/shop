@@ -12,6 +12,7 @@ import { indexOrderRouter } from './routes';
 import { NotFoundError } from '@vaibhtickets/common';
 import { errorHandler } from './middlewares/error-handler';
 import { TicketCreatedListener } from './events/listeners/ticket-created-listener';
+import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
 
 
 console.log('I am in orders as of now')
@@ -37,9 +38,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 
 const start = async ()=>{
-
-  
-
     try{
         await natsWrapper.connect('ticketing', 'last2', 'http://nats-srv:4222')
 
@@ -52,6 +50,7 @@ const start = async ()=>{
         process.on('SIGTERM', ()=> natsWrapper.client.close())
 
         new TicketCreatedListener(natsWrapper.client).listen()
+        new OrderCancelledListener(natsWrapper.client).listen()
 
         await mongoose.connect('mongodb://orders-mongo-srv:27017/orders', {
             // @ts-ignore
