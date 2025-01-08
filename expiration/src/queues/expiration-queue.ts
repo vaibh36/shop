@@ -20,12 +20,12 @@ const expirationQueue = new Queue<Payload>('order:expiration', {
 
 expirationQueue.process(async (job) => {
     console.log('order id and ticket which are to be expired are:-', job.data.orderId, job.data.ticket.id)
-    new OrderCancelledPublisher(natsWrapper.client).publish({
-        orderId: job.data.orderId,
-        ticket: {
-            id: job.data.ticket.id
-        }
-    })
+    // new OrderCancelledPublisher(natsWrapper.client).publish({
+    //     orderId: job.data.orderId,
+    //     ticket: {
+    //         id: job.data.ticket.id
+    //     }
+    // })
 
 })
 
